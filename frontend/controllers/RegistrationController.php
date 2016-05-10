@@ -14,8 +14,13 @@ class RegistrationController extends \yii\web\Controller
     {
         $model = new RegistrationForm();
 
-        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+        //var_dump($_POST);
+        //die;
 
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            // Запишем всю инфу в базу
+
+            $this->redirect('/registration/succes/');
         }
 
 //        $db = new Connection(
@@ -50,9 +55,9 @@ class RegistrationController extends \yii\web\Controller
         //$user = User::find_all();
 
 
-
-
-
+        /**
+         * $customer = Customers::findOne(1);
+         */
         return $this->render('index', [
             'model' => $model
         ]);
@@ -86,6 +91,8 @@ class RegistrationController extends \yii\web\Controller
         ]);
     }
 
-
-
+    public function actionSucces()
+    {
+        return $this->render('succes', []);
+    }
 }

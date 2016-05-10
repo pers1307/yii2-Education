@@ -34,6 +34,11 @@ class RegistrationForm extends Model
     /**
      * @var
      */
+    public $password;
+
+    /**
+     * @var
+     */
     public $bornDate;
 
     /**
@@ -63,13 +68,23 @@ class RegistrationForm extends Model
                     'surname',
                     'email',
                     'login',
+                    'password',
                     'bornDate',
                     'sex',
-                    'accept'
                 ],
                 'required', 'message' => 'Поле не должно быть пустым'
             ],
             ['email', 'email', 'message' => 'Email указан в неверном формате'],
+            [
+                [
+                    'name',
+                    'surname',
+                    'login',
+                    'password',
+                ]
+                , 'filter', 'filter' => 'strip_tags'
+            ],
+            ['accept', 'compare', 'compareValue' => '1', 'message' => 'Вы должны принять соглашение']
         ];
     }
 
@@ -83,6 +98,7 @@ class RegistrationForm extends Model
             'surname'  => 'Фамилия',
             'email'    => 'Email',
             'login'    => 'Логин',
+            'password' => 'Пароль',
             'bornDate' => 'Дата рождения',
             'sex'      => 'Пол',
             'town'     => 'Город',

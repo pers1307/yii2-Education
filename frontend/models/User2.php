@@ -35,14 +35,14 @@ class User2 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'email'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
-            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['id' => 'user_id']],
+//            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
+//            [['status', 'created_at', 'updated_at'], 'integer'],
+//            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+//            [['auth_key'], 'string', 'max' => 32],
+//            [['username'], 'unique'],
+//            [['email'], 'unique'],
+//            [['password_reset_token'], 'unique'],
+//            [['id'], 'exist', 'skipOnError' => true, 'targetClass' => Profile::className(), 'targetAttribute' => ['id' => 'user_id']],
         ];
     }
 

@@ -3,7 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\User;
-use frontend\models\profile;
+use frontend\models\Profile;
 use frontend\models\RegistrationForm;
 use frontend\models\User2;
 use yii\db\Connection;
@@ -14,11 +14,21 @@ class RegistrationController extends \yii\web\Controller
     {
         $model = new RegistrationForm();
 
-        //var_dump($_POST);
-        //die;
-
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
-            // Запишем всю инфу в базу
+            $user = new User2();
+
+            // Ручная перекладка
+            $profile = new profile();
+
+            $profile->sex = $model->sex;
+            $profile->born_date = $model->bornDate;
+
+            $profile->save();
+
+            $user->email = $model->email;
+
+            $user->link('profile', $profile);
+            $user->save();
 
             $this->redirect('/registration/succes/');
         }
@@ -59,28 +69,26 @@ class RegistrationController extends \yii\web\Controller
          * $customer = Customers::findOne(1);
          */
         return $this->render('index', [
-            'model' => $model
+            'model'   => $model
         ]);
     }
 
     public function actionReg()
     {
-        //$model = new frontend\models\User2();
-
         $model = new User2();
 
-        $model_profile = new profile();
+        $model_profile = new Profile();
 
         if ($model->load(\Yii::$app->request->post())) {
 
             if ($model->validate()) {
-                $profile = new profile();
-                $profile->load(\Yii::$app->request->post());
-                $profile->save();
+                //$profile = new profile();
+                $model_profile->load(\Yii::$app->request->post());
+                $model_profile->save();
 
                 //$model_profile->save();
 
-                $model->link('profile', $profile);
+                $model->link('profile', $model_profile);
                 $model->save();
             }
         }

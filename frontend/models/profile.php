@@ -9,12 +9,14 @@ use Yii;
  *
  * @property integer $user_id
  * @property string $name
- * @property string $phone
  * @property integer $sex
+ * @property string $surname
+ * @property string $born_date
+ * @property string $town
  *
- * @property User $user
+ * @property User2 $user
  */
-class profile extends \yii\db\ActiveRecord
+class Profile extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -31,8 +33,7 @@ class profile extends \yii\db\ActiveRecord
     {
         return [
             [['sex'], 'integer'],
-            [['name'], 'string', 'max' => 255],
-            [['phone'], 'string', 'max' => 25],
+            [['name', 'surname', 'born_date', 'town'], 'string', 'max' => 255],
         ];
     }
 
@@ -44,8 +45,10 @@ class profile extends \yii\db\ActiveRecord
         return [
             'user_id' => 'User ID',
             'name' => 'Name',
-            'phone' => 'Phone',
             'sex' => 'Sex',
+            'surname' => 'Surname',
+            'born_date' => 'Born Date',
+            'town' => 'Town',
         ];
     }
 
@@ -54,6 +57,6 @@ class profile extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User2::className(), ['id' => 'user_id']);
     }
 }

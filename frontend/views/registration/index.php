@@ -99,9 +99,10 @@ use yii\helpers\Html;
                 ]
             )
                 ->radioList([
-                    'men' => 'Муж',
-                    'female' => 'Жен',
+                    '1' => 'Муж',
+                    '0' => 'Жен',
                 ])
+                ->label('Пол')
             ?>
 
             <?= $form->field($model, 'bornDate',

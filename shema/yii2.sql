@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50538
 File Encoding         : 65001
 
-Date: 2016-05-11 15:01:16
+Date: 2016-05-11 17:30:36
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -64,12 +64,13 @@ CREATE TABLE `order_position` (
   PRIMARY KEY (`id`),
   KEY `id_to_product` (`id_product`),
   CONSTRAINT `id_to_product` FOREIGN KEY (`id_product`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of order_position
 -- ----------------------------
 INSERT INTO `order_position` VALUES ('1', '10', '1');
+INSERT INTO `order_position` VALUES ('2', '100', '1');
 
 -- ----------------------------
 -- Table structure for products

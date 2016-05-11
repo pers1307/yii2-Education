@@ -31,7 +31,7 @@ class OrderPosition extends \yii\db\ActiveRecord
     {
         return [
             [['count', 'id_product'], 'integer'],
-            [['id_product'], 'exist', 'skipOnError' => true, 'targetClass' => Products::className(), 'targetAttribute' => ['id_product' => 'id']],
+            [['id_product'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['id_product' => 'id']],
         ];
     }
 
@@ -52,7 +52,7 @@ class OrderPosition extends \yii\db\ActiveRecord
      */
     public function getIdProduct()
     {
-        return $this->hasOne(Products::className(), ['id' => 'id_product']);
+        return $this->hasOne(Product::className(), ['id' => 'id_product']);
     }
 
     /**

@@ -10,123 +10,10 @@ Target Server Type    : MYSQL
 Target Server Version : 50538
 File Encoding         : 65001
 
-Date: 2016-05-11 10:02:48
+Date: 2016-05-11 15:01:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for customers
--- ----------------------------
-DROP TABLE IF EXISTS `customers`;
-CREATE TABLE `customers` (
-  `CustomersID` int(11) NOT NULL AUTO_INCREMENT,
-  `FirstName` varchar(45) NOT NULL,
-  `SecondName` varchar(45) NOT NULL,
-  `Phone` varchar(45) DEFAULT NULL,
-  `Adress` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`CustomersID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of customers
--- ----------------------------
-INSERT INTO `customers` VALUES ('1', 'Николай', 'Афанасьев', '02', 'г. Москва ул.Пушкина д.12');
-
--- ----------------------------
--- Table structure for employees
--- ----------------------------
-DROP TABLE IF EXISTS `employees`;
-CREATE TABLE `employees` (
-  `EmployeeID` int(11) NOT NULL AUTO_INCREMENT,
-  `FirstName` varchar(45) NOT NULL,
-  `SecondName` varchar(45) NOT NULL,
-  `Phone` varchar(45) NOT NULL,
-  `Hired` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Job` int(11) NOT NULL,
-  `Fired` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`EmployeeID`),
-  KEY `fk_Employees_Jobs_idx` (`Job`),
-  CONSTRAINT `fk_Employees_Jobs` FOREIGN KEY (`Job`) REFERENCES `jobs` (`JobID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of employees
--- ----------------------------
-INSERT INTO `employees` VALUES ('1', 'Василий', 'Наливайко', '88005553535', '2015-04-03 21:00:00', '1', null);
-
--- ----------------------------
--- Table structure for jobs
--- ----------------------------
-DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE `jobs` (
-  `JobID` int(11) NOT NULL AUTO_INCREMENT,
-  `Description` varchar(45) NOT NULL,
-  PRIMARY KEY (`JobID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of jobs
--- ----------------------------
-INSERT INTO `jobs` VALUES ('1', 'Кассир');
-
--- ----------------------------
--- Table structure for journal
--- ----------------------------
-DROP TABLE IF EXISTS `journal`;
-CREATE TABLE `journal` (
-  `OfferID` int(11) NOT NULL AUTO_INCREMENT,
-  `SellDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `Employee` int(11) DEFAULT NULL,
-  `CustomerID` int(11) DEFAULT NULL,
-  PRIMARY KEY (`OfferID`),
-  KEY `fk_Journal_Employees1_idx` (`Employee`),
-  KEY `fk_Journal_Customers1_idx` (`CustomerID`),
-  CONSTRAINT `fk_Journal_Customers1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`CustomersID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Journal_Employees1` FOREIGN KEY (`Employee`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of journal
--- ----------------------------
-INSERT INTO `journal` VALUES ('1', '2016-02-10 21:00:00', '1', '1');
-
--- ----------------------------
--- Table structure for medicinelist
--- ----------------------------
-DROP TABLE IF EXISTS `medicinelist`;
-CREATE TABLE `medicinelist` (
-  `MedID` int(11) NOT NULL,
-  `Name` varchar(45) NOT NULL,
-  `DateOfProd` date NOT NULL,
-  `BestBefore` date NOT NULL,
-  PRIMARY KEY (`MedID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of medicinelist
--- ----------------------------
-INSERT INTO `medicinelist` VALUES ('1', 'Аспирин', '0000-00-00', '0000-00-00');
-
--- ----------------------------
--- Table structure for medicinelist_has_journal
--- ----------------------------
-DROP TABLE IF EXISTS `medicinelist_has_journal`;
-CREATE TABLE `medicinelist_has_journal` (
-  `MedID` int(11) NOT NULL,
-  `JournalID` int(11) NOT NULL,
-  `Count` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`MedID`,`JournalID`),
-  KEY `fk_MedicineList_has_Journal_Journal1_idx` (`JournalID`),
-  KEY `fk_MedicineList_has_Journal_MedicineList1_idx` (`MedID`),
-  CONSTRAINT `fk_MedicineList_has_Journal_Journal1` FOREIGN KEY (`JournalID`) REFERENCES `journal` (`OfferID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_MedicineList_has_Journal_MedicineList1` FOREIGN KEY (`MedID`) REFERENCES `medicinelist` (`MedID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of medicinelist_has_journal
--- ----------------------------
-INSERT INTO `medicinelist_has_journal` VALUES ('1', '1', '2');
 
 -- ----------------------------
 -- Table structure for migration
@@ -151,15 +38,54 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
+  `id_position` int(11) DEFAULT NULL,
   `all_sum` decimal(10,0) DEFAULT NULL,
   `date_created` timestamp NULL DEFAULT NULL,
-  `date_updated` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `id_cart` (`user_id`),
+  KEY `id_position` (`id_position`),
+  CONSTRAINT `id_to_position` FOREIGN KEY (`id_position`) REFERENCES `order_position` (`id`),
+  CONSTRAINT `id_cart` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
+INSERT INTO `orders` VALUES ('1', '6', '1', '10000', '2016-05-11 14:55:26');
+
+-- ----------------------------
+-- Table structure for order_position
+-- ----------------------------
+DROP TABLE IF EXISTS `order_position`;
+CREATE TABLE `order_position` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `count` int(11) DEFAULT NULL,
+  `id_product` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_to_product` (`id_product`),
+  CONSTRAINT `id_to_product` FOREIGN KEY (`id_product`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of order_position
+-- ----------------------------
+INSERT INTO `order_position` VALUES ('1', '10', '1');
+
+-- ----------------------------
+-- Table structure for products
+-- ----------------------------
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `price` decimal(10,0) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of products
+-- ----------------------------
+INSERT INTO `products` VALUES ('1', 'Веревка', '1000');
 
 -- ----------------------------
 -- Table structure for profile
@@ -206,4 +132,4 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('6', '', '', '', null, 'sr@t.ty', '10', '0', '0');
+INSERT INTO `user` VALUES ('6', 'Владелец', '', '', null, 'sr@t.ty', '10', '0', '0');
